@@ -995,4 +995,21 @@
     Backbone.history.start({root: '®ooτ', pushState: true});
   });
 
+  asyncTest("creates new entries in history after async", 2, function() {
+    Backbone.history.stop();
+    Backbone.history = new Backbone.History;
+    Backbone.history.start();
+    var historyLength = history.length;
+
+    Backbone.history.navigate('contacts', {trigger: true});
+    equal(history.length, historyLength + 1);
+
+    var promise = $.get('../package.json');
+    promise.done( function() {
+      start();
+      Backbone.history.navigate('contacts/new', {trigger: true});
+      equal(history.length, historyLength + 2);
+    });
+  });
+
 })();
